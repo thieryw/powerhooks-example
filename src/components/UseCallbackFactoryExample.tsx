@@ -103,7 +103,7 @@ const Cell = memo((props: CellProps)=>{
 type Props= {
     priority: number;
     task: string;
-    onClick(action: "DELETE" | "EDIT", task: string): void;
+    onClick(action: "DELETE" | "EDIT"): void;
   };
   
   
@@ -114,8 +114,8 @@ type Props= {
   
     console.log(`render ${task}`);
   
-    const onEditClick = useConstCallback(()=> onClick("EDIT", task));
-    const onDeleteClick = useConstCallback(()=> onClick("DELETE", task));
+    const onEditClick = useConstCallback(()=> onClick("EDIT"));
+    const onDeleteClick = useConstCallback(()=> onClick("DELETE"));
   
     return (
       <div>
@@ -159,20 +159,20 @@ export const UseCallbackFactoryExample = ()=>{
     );
   
     
-    /*const onClick = useCallback(
+    const onClick = useCallback(
       (action: "DELETE" | "EDIT", task: string)=> {
         alert(`Click on "${task}", action requested: ${action}`)
       },
       []
-    );*/
+    );
     
   
-    const onClickFactory = useCallbackFactory(
+    /*const onClickFactory = useCallbackFactory(
       (
         [task, priority]: [string, number], 
         [action]: Parameters<Props["onClick"]>
       )=> alert(`Click on "${task}${priority}", action requested: ${action}`)
-    );
+    );*/
   
     
     return(
@@ -183,7 +183,7 @@ export const UseCallbackFactoryExample = ()=>{
             key={task}
             priority={priority}
             task={task}
-            onClick={onClickFactory(task, priority)}
+            onClick={(task) => onClick("DELETE", task)}
           />
         )
       }  
