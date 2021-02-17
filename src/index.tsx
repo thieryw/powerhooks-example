@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {UseDomRectExample} from "./components/UseDomRectExample";
-import {UseWindowInnerSizeExample} from "./components/UseWindowInnerSizeExample";
-import {UseNamedStateExample} from "./components/UseNamedStateExample";
-import {UseCallbackFactoryExample} from "./components/UseCallbackFactoryExample";
-import {UseClickExample} from "./components/UseClickExample";
+//import {UseDomRectExample} from "./components/UseDomRectExample";
+//import {UseWindowInnerSizeExample} from "./components/UseWindowInnerSizeExample";
+//import {UseNamedStateExample} from "./components/UseNamedStateExample";
+import {BadExample} from "./components/UseCallbackFactoryExample/BadExample";
+import {GoodExample} from "./components/UseCallbackFactoryExample/GoodExample";
+//import {UseClickExample} from "./components/UseClickExample";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -14,7 +15,15 @@ ReactDOM.render(
 
 
 
-   <UseCallbackFactoryExample />
+
+  <div>
+    <h1>useCallbackFactory</h1>
+
+
+   <BadExample />
+   <GoodExample />
+  </div>
+
 
 
 
