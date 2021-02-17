@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {UseDomRectExample} from "./components/UseDomRectExample";
-import {UseWindowInnerSizeExample} from "./components/UseWindowInnerSizeExample";
-import {UseNamedStateExample} from "./components/UseNamedStateExample";
+//import {UseDomRectExample} from "./components/UseDomRectExample";
+//import {UseWindowInnerSizeExample} from "./components/UseWindowInnerSizeExample";
+//import {UseNamedStateExample} from "./components/UseNamedStateExample";
 import {UseCallbackFactoryExample} from "./components/UseCallbackFactoryExample";
-import {UseClickExample} from "./components/UseClickExample";
+//import {UseClickExample} from "./components/UseClickExample";
 
 ReactDOM.render(
   <React.StrictMode>
