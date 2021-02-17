@@ -159,20 +159,20 @@ export const UseCallbackFactoryExample = ()=>{
     );
   
     
-    const onClick = useCallback(
+    /*const onClick = useCallback(
       (action: "DELETE" | "EDIT", task: string)=> {
         alert(`Click on "${task}", action requested: ${action}`)
       },
       []
-    );
+    );*/
     
   
-    /*const onClickFactory = useCallbackFactory(
+    const onClickFactory = useCallbackFactory(
       (
         [task, priority]: [string, number], 
         [action]: Parameters<Props["onClick"]>
       )=> alert(`Click on "${task}${priority}", action requested: ${action}`)
-    );*/
+    );
   
     
     return(
@@ -183,7 +183,7 @@ export const UseCallbackFactoryExample = ()=>{
             key={task}
             priority={priority}
             task={task}
-            onClick={onClick}
+            onClick={onClickFactory(task, priority)}
           />
         )
       }  

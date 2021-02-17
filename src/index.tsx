@@ -5,21 +5,17 @@ import reportWebVitals from './reportWebVitals';
 import {UseDomRectExample} from "./components/UseDomRectExample";
 import {UseWindowInnerSizeExample} from "./components/UseWindowInnerSizeExample";
 import {UseNamedStateExample} from "./components/UseNamedStateExample";
-//import {UseCallbackFactoryExample} from "./components/UseCallbackFactoryExample";
+import {UseCallbackFactoryExample} from "./components/UseCallbackFactoryExample";
 import {UseClickExample} from "./components/UseClickExample";
 
 ReactDOM.render(
   <React.StrictMode>
 
-    <UseDomRectExample />
 
-    <UseWindowInnerSizeExample />
 
-    <UseNamedStateExample/>
 
-   {/* <UseCallbackFactoryExample />*/}
+   <UseCallbackFactoryExample />
 
-    <UseClickExample />
 
 
 
