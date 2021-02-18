@@ -5,9 +5,8 @@ import reportWebVitals from './reportWebVitals';
 //import {UseDomRectExample} from "./components/UseDomRectExample";
 //import {UseWindowInnerSizeExample} from "./components/UseWindowInnerSizeExample";
 //import {UseNamedStateExample} from "./components/UseNamedStateExample";
-import {BadExample} from "./components/UseCallbackFactoryExample/BadExample";
-import {GoodExample} from "./components/UseCallbackFactoryExample/GoodExample";
 //import {UseClickExample} from "./components/UseClickExample";
+import {TecTacTow} from "./components/UseCallbackFactoryExample/BadExample";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -19,9 +18,8 @@ ReactDOM.render(
   <div>
     <h1>useCallbackFactory</h1>
 
+    <TecTacTow />
 
-   <BadExample />
-   <GoodExample />
   </div>
 
 
