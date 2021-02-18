@@ -1,9 +1,6 @@
 import { memo, useEffect, useState, useCallback} from "react";
 
 
-
-
-
 export const BadExample = ()=>{
 
 
@@ -49,7 +46,7 @@ export const BadExample = ()=>{
     )
 }
 
-let renderCounts = [0,0,0,0,0,0,0,0,0];
+const renderCounts = [0,0,0,0,0,0,0,0,0];
 
 
 type CellProps = {

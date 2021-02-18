@@ -1,4 +1,4 @@
-import { memo, useEffect, useState, useCallback} from "react";
+import { memo, useEffect, useState, useCallback, useReducer} from "react";
 import {useCallbackFactory} from "powerhooks/useCallbackFactory";
 
 export const GoodExample = ()=>{
@@ -8,21 +8,23 @@ export const GoodExample = ()=>{
     const [shape, setShape] = useState<"crosse" | "circle">("crosse")
 
 
+
+
     useEffect(()=>{
         console.log("update");
     })
 
-    /*const onClick = useCallbackFactory(([shape] : ["crosse" | "circle"])=>{
+    const onClick = useCallbackFactory(([shape] : ["crosse" | "circle"])=>{
 
       setShape(shape === "circle" ? "crosse" : "circle");
 
       return shape;
 
-    });*/
+    });
 
-    const onClick = useCallback(()=>{
+    /*const onClick = useCallback(()=>{
         setShape(shape === "crosse" ? "circle" : "crosse");
-    }, [setShape, shape])
+    }, [setShape, shape])*/
 
 
    
@@ -45,7 +47,7 @@ export const GoodExample = ()=>{
 
                 {
                     [0,1,2,3,4,5,6,7,8].map((cellNumber) => 
-                        <Cell onClick={onClick} key={cellNumber} cellNumber={cellNumber}/>)
+                        <Cell onClick={onClick(shape)} key={cellNumber} cellNumber={cellNumber}/>)
                 }
             </div>
         </div>
@@ -56,7 +58,7 @@ let renderCounts = [0,0,0,0,0,0,0,0,0];
 
 
 type CellProps = {
-    onClick: ()=> void;
+    onClick: ()=> "crosse" | "circle";
     cellNumber: number;
 }
 
@@ -77,7 +79,7 @@ const Cell = memo((props: CellProps)=>{
         return;
       }
 
-      onClick();
+      setShape(onClick());
 
     }, [shape, onClick])
 
