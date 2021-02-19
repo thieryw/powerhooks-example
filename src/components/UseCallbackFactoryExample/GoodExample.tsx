@@ -1,4 +1,4 @@
-import {useState, useCallback, memo} from "react";
+import {memo} from "react";
 import {useCallbackFactory} from "powerhooks/useCallbackFactory";
 import {useConstCallback} from "powerhooks/useConstCallback";
 import {useNamedState} from "powerhooks/useNamedState";
