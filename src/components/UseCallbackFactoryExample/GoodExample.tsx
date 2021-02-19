@@ -1,10 +1,13 @@
 import {useState, useCallback, memo} from "react";
 import {useCallbackFactory} from "powerhooks/useCallbackFactory";
+import {useConstCallback} from "powerhooks/useConstCallback";
+import {useNamedState} from "powerhooks/useNamedState";
 
+type Shape = "crosse" | "circle"
 
 type GameState = {
-    currentShape: "crosse" | "circle",
-    currentCellStates: ("crosse" | "circle" | "unset")[];
+    currentShape: Shape,
+    currentCellStates: (Shape | "unset")[];
     isGameWon: ()=> boolean;
 }
 
@@ -65,7 +68,13 @@ const gameState: GameState = {
 
 export const TicTacTow = ()=>{
 
-    const [isGameWon, setIsGameWon] = useState(false);
+    
+    const {isGameWon, setIsGameWon} = 
+        useNamedState<boolean, "isGameWon">("isGameWon", false);
+
+    const {currentShape, setCurrentShape} = 
+        useNamedState<Shape, "currentShape">("currentShape", "crosse");
+    
 
     console.log("grid render");
 
@@ -75,6 +84,8 @@ export const TicTacTow = ()=>{
 
         gameState.currentShape = gameState.currentShape === "circle" ?
             "crosse" : "circle";
+
+        setCurrentShape(gameState.currentShape);
 
         setIsGameWon(gameState.isGameWon());
 
@@ -97,7 +108,7 @@ export const TicTacTow = ()=>{
                             gameState.currentShape === "crosse" ? 
                                 "O" : "X"
                         }` 
-                    : ""
+                    : `Current shape : ${currentShape === "crosse" ? "X" : "O"}`
                 }
             </h2>
 
@@ -133,13 +144,14 @@ type CellProps = {
 
 const Cell = memo((props: CellProps)=>{
 
-    const {updateGame: checkIfGameWon} = props;
+    const {updateGame} = props;
 
-    const [shape, setShape] = useState<"crosse" | "circle" | "unSet">("unSet")
+    const {shape, setShape} = 
+        useNamedState<Shape | "unSet", "shape">("shape", "unSet");
 
     console.log("box render");
 
-    const onClick = useCallback(()=>{
+    const onClick = useConstCallback(()=>{
 
         if(shape !== "unSet"){
             return;
@@ -147,12 +159,9 @@ const Cell = memo((props: CellProps)=>{
 
         setShape(gameState.currentShape);
 
-        checkIfGameWon();
+        updateGame();
 
-
-
-
-    }, [setShape, checkIfGameWon, shape]);
+    });
 
     return(
         <div onClick={onClick} style={{

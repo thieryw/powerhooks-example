@@ -65,10 +65,19 @@ const gameState: GameState = {
 export const TicTacTow = ()=>{
 
     const [isGameWon, setIsGameWon] = useState(false);
+    const [currentShape, setCurrentShape] = 
+        useState<"crosse" | "circle">(gameState.currentShape);
 
     console.log("grid render");
 
-    const checkIfGameWon = useCallback(()=>{
+    const updateGame = useCallback((cellNumber: number)=>{
+
+        gameState.currentCellStates[cellNumber] = gameState.currentShape;
+
+        gameState.currentShape = gameState.currentShape === "crosse" ? 
+            "circle" : "crosse";
+
+        setCurrentShape(gameState.currentShape);
 
         setIsGameWon(gameState.isGameWon());
 
@@ -91,7 +100,7 @@ export const TicTacTow = ()=>{
                             gameState.currentShape === "crosse" ? 
                                 "O" : "X"
                         }` 
-                    : ""
+                    : `Current shape : ${currentShape === "crosse" ? "X" : "O"}`
                 }
             </h2>
 
@@ -107,8 +116,7 @@ export const TicTacTow = ()=>{
                 {
                     [0,1,2,3,4,5,6,7,8].map(cellNumber => 
                         <Cell 
-                            checkIfGameWon={checkIfGameWon} 
-                            cellNumber={cellNumber} 
+                            updateGame={() => updateGame(cellNumber)} 
                             key={cellNumber}
                         />
                     )
@@ -122,14 +130,13 @@ export const TicTacTow = ()=>{
 
 
 type CellProps = {
-    cellNumber: number;
-    checkIfGameWon: ()=>void;
+    updateGame: ()=>void;
 }
 
 
 const Cell = memo((props: CellProps)=>{
 
-    const {cellNumber, checkIfGameWon} = props;
+    const {updateGame} = props;
 
     const [shape, setShape] = useState<"crosse" | "circle" | "unSet">("unSet")
 
@@ -143,15 +150,12 @@ const Cell = memo((props: CellProps)=>{
 
         setShape(gameState.currentShape);
 
-        gameState.currentCellStates[cellNumber] = gameState.currentShape;
-
-        gameState.currentShape = gameState.currentShape === "crosse" ? 
-            "circle" : "crosse";
-
-        checkIfGameWon();
 
 
-    }, [setShape, cellNumber, checkIfGameWon, shape]);
+        updateGame();
+
+
+    }, [setShape, updateGame, shape]);
 
     return(
         <div onClick={clickHandler} style={{
