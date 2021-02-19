@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, memo } from "react";
+import { useState, useMemo, memo } from "react";
 
 type CellState = "X" | "O" | "";
 
@@ -57,7 +57,7 @@ export const TicTacTow = memo(() => {
         [cellStates]
     );
 
-    const onCellClick = useCallback((cellIndex: number) => {
+    const onCellClick = (cellIndex: number) => {
 
         setCellStates(
             cellStates.map(
@@ -72,7 +72,7 @@ export const TicTacTow = memo(() => {
             }
         })());
 
-    }, [cellStates, playerTurn]);
+    };
 
     return (
         <div style={{
