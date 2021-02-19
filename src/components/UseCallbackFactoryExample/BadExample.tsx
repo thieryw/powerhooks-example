@@ -6,7 +6,7 @@ type Shape = "crosse" | "circle";
 type GameState = {
     currentShape: Shape,
     currentCellStates: (Shape | "unset")[];
-    isGameWon: ()=> boolean;
+    isGameWon(): boolean;
 }
 
 const gameState: GameState = {
