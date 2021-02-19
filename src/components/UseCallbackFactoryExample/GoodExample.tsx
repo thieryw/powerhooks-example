@@ -1,4 +1,5 @@
 import {useState, useCallback, memo} from "react";
+import {useCallbackFactory} from "powerhooks/useCallbackFactory";
 
 
 type GameState = {
@@ -68,11 +69,16 @@ export const TicTacTow = ()=>{
 
     console.log("grid render");
 
-    const checkIfGameWon = useCallback(()=>{
+    const updateGameFactory = useCallbackFactory(([cellNumber]: [number])=>{
+
+        gameState.currentCellStates[cellNumber] = gameState.currentShape;
+
+        gameState.currentShape = gameState.currentShape === "circle" ?
+            "crosse" : "circle";
 
         setIsGameWon(gameState.isGameWon());
 
-    }, []);
+    });
 
 
 
@@ -107,8 +113,7 @@ export const TicTacTow = ()=>{
                 {
                     [0,1,2,3,4,5,6,7,8].map(cellNumber => 
                         <Cell 
-                            checkIfGameWon={checkIfGameWon} 
-                            cellNumber={cellNumber} 
+                            updateGame={updateGameFactory(cellNumber)} 
                             key={cellNumber}
                         />
                     )
@@ -122,20 +127,19 @@ export const TicTacTow = ()=>{
 
 
 type CellProps = {
-    cellNumber: number;
-    checkIfGameWon: ()=>void;
+    updateGame: ()=>void;
 }
 
 
 const Cell = memo((props: CellProps)=>{
 
-    const {cellNumber, checkIfGameWon} = props;
+    const {updateGame: checkIfGameWon} = props;
 
     const [shape, setShape] = useState<"crosse" | "circle" | "unSet">("unSet")
 
     console.log("box render");
 
-    const clickHandler = useCallback(()=>{
+    const onClick = useCallback(()=>{
 
         if(shape !== "unSet"){
             return;
@@ -143,18 +147,15 @@ const Cell = memo((props: CellProps)=>{
 
         setShape(gameState.currentShape);
 
-        gameState.currentCellStates[cellNumber] = gameState.currentShape;
-
-        gameState.currentShape = gameState.currentShape === "crosse" ? 
-            "circle" : "crosse";
-
         checkIfGameWon();
 
 
-    }, [setShape, cellNumber, checkIfGameWon, shape]);
+
+
+    }, [setShape, checkIfGameWon, shape]);
 
     return(
-        <div onClick={clickHandler} style={{
+        <div onClick={onClick} style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
