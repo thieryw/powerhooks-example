@@ -1,9 +1,11 @@
 import {useState, useCallback, memo} from "react";
 
 
+type Shape = "crosse" | "circle";
+
 type GameState = {
-    currentShape: "crosse" | "circle",
-    currentCellStates: ("crosse" | "circle" | "unset")[];
+    currentShape: Shape,
+    currentCellStates: (Shape | "unset")[];
     isGameWon: ()=> boolean;
 }
 
@@ -66,7 +68,7 @@ export const TicTacTow = ()=>{
 
     const [isGameWon, setIsGameWon] = useState(false);
     const [currentShape, setCurrentShape] = 
-        useState<"crosse" | "circle">(gameState.currentShape);
+        useState<Shape>(gameState.currentShape);
 
     console.log("grid render");
 
@@ -138,7 +140,7 @@ const Cell = memo((props: CellProps)=>{
 
     const {updateGame} = props;
 
-    const [shape, setShape] = useState<"crosse" | "circle" | "unSet">("unSet")
+    const [shape, setShape] = useState<Shape | "unSet">("unSet")
 
     console.log("box render");
 
