@@ -1,32 +1,20 @@
-import {memo} from "react";
+import {useState, useCallback, memo, useMemo} from "react";
 import {useCallbackFactory} from "powerhooks/useCallbackFactory";
-import {useConstCallback} from "powerhooks/useConstCallback";
-import {useNamedState} from "powerhooks/useNamedState";
 
-type Shape = "crosse" | "circle"
 
-type GameState = {
-    currentShape: Shape,
-    currentCellStates: (Shape | "unset")[];
-    isGameWon: ()=> boolean;
-}
+type CellState = "X" | "O" | "";
 
-const gameState: GameState = {
-    "currentShape": "crosse",
-    "currentCellStates": [
-        "unset", "unset", "unset",
-        "unset", "unset", "unset",
-        "unset", "unset", "unset"
-    ],
-    "isGameWon": ()=>{
 
-        const currentCellStates = gameState.currentCellStates;
+
+
+ function getIsGameWon(cellStates: CellState[]){
+
 
 
         for(const n of [0,1,2]){
-            if(currentCellStates[n] === currentCellStates[n + 3] &&
-                currentCellStates[n] === currentCellStates[n + 6] &&
-                currentCellStates[n] !== "unset"
+            if(cellStates[n] === cellStates[n + 3] &&
+                cellStates[n] === cellStates[n + 6] &&
+                cellStates[n] !== ""
             ){
                 return true;
 
@@ -34,24 +22,24 @@ const gameState: GameState = {
         }
 
         for(const n of [0,3,6]){
-            if(currentCellStates[n] === currentCellStates[n+1] &&
-                currentCellStates[n] === currentCellStates[n+2] &&
-                currentCellStates[n] !== "unset"
+            if(cellStates[n] === cellStates[n+1] &&
+                cellStates[n] === cellStates[n+2] &&
+                cellStates[n] !== ""
             ){
                 return true;
             }
         }
 
-        if(currentCellStates[0] === currentCellStates[4] &&
-            currentCellStates[0] === currentCellStates[8] &&
-            currentCellStates[0] !== "unset"
+        if(cellStates[0] === cellStates[4] &&
+            cellStates[0] === cellStates[8] &&
+            cellStates[0] !== ""
         ){
             return true;
         }
 
-        if(currentCellStates[6] === currentCellStates[4] &&
-            currentCellStates[6] === currentCellStates[2] &&
-            currentCellStates[6] !== "unset"
+        if(cellStates[6] === cellStates[4] &&
+            cellStates[6] === cellStates[2] &&
+            cellStates[6] !== ""
         ){
             return true;
         }
@@ -61,35 +49,42 @@ const gameState: GameState = {
         return false;
 
     }
-}
 
 
 
 
 export const TicTacTow = ()=>{
 
-    
-    const {isGameWon, setIsGameWon} = 
-        useNamedState<boolean, "isGameWon">("isGameWon", false);
-
-    const {currentShape, setCurrentShape} = 
-        useNamedState<Shape, "currentShape">("currentShape", "crosse");
-    
-
     console.log("grid render");
 
-    const updateGameFactory = useCallbackFactory(([cellNumber]: [number])=>{
 
-        gameState.currentCellStates[cellNumber] = gameState.currentShape;
+    
+    const [cellStates, setCellStates] = useState<CellState[]>(
+        [
+            "", "", "",
+            "", "", "",
+            "", "", ""
+        ]
+    )
 
-        gameState.currentShape = gameState.currentShape === "circle" ?
-            "crosse" : "circle";
+    const [currentPlayer, setPlayerPlaying] = useState<Exclude<CellState, "">>("X");
 
-        setCurrentShape(gameState.currentShape);
+    const isGameWon = useMemo(()=>
+        getIsGameWon(cellStates)
+    ,[cellStates]);
 
-        setIsGameWon(gameState.isGameWon());
+
+    const onClick = useCallbackFactory(([cellNumber]: [number])=>{
+
+        cellStates[cellNumber] = currentPlayer;
+
+        setCellStates([...cellStates]);
+
+        setPlayerPlaying(currentPlayer === "X" ? "O" : "X");
 
     });
+
+
 
 
 
@@ -105,10 +100,9 @@ export const TicTacTow = ()=>{
                 {
                     isGameWon ? 
                         `game won by ${
-                            gameState.currentShape === "crosse" ? 
-                                "O" : "X"
+                            currentPlayer === "O" ? "X" : "0"
                         }` 
-                    : `Current shape : ${currentShape === "crosse" ? "X" : "O"}`
+                    : `Current shape : ${currentPlayer}`
                 }
             </h2>
 
@@ -124,7 +118,8 @@ export const TicTacTow = ()=>{
                 {
                     [0,1,2,3,4,5,6,7,8].map(cellNumber => 
                         <Cell 
-                            updateGame={updateGameFactory(cellNumber)} 
+                            onClick={onClick(cellNumber)}
+                            currentPlayer={currentPlayer}
                             key={cellNumber}
                         />
                     )
@@ -138,33 +133,29 @@ export const TicTacTow = ()=>{
 
 
 type CellProps = {
-    updateGame: ()=>void;
+    onClick(): void;
+    currentPlayer: CellState;
 }
 
 
 const Cell = memo((props: CellProps)=>{
 
-    const {updateGame} = props;
+    const {onClick, currentPlayer} = props;
 
-    const {shape, setShape} = 
-        useNamedState<Shape | "unSet", "shape">("shape", "unSet");
+    const [cellState, setCellState] = useState<CellState>("");
 
     console.log("box render");
 
-    const onClick = useConstCallback(()=>{
+    const onCellClick = useCallback(()=>{
+        setCellState(currentPlayer);
+        onClick();
 
-        if(shape !== "unSet"){
-            return;
-        }
+    },[currentPlayer, onClick]);
 
-        setShape(gameState.currentShape);
-
-        updateGame();
-
-    });
+    
 
     return(
-        <div onClick={onClick} style={{
+        <div onClick={onCellClick} style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -174,13 +165,7 @@ const Cell = memo((props: CellProps)=>{
 
             <h1>
                 {
-                    (()=>{
-                        switch(shape){
-                            case "circle" : return "O";
-                            case "crosse" : return "X";
-                            default : return "";
-                        }
-                    })()
+                    cellState
 
                 }
             </h1>
