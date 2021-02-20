@@ -1,4 +1,5 @@
 import { useState, useMemo, memo } from "react";
+import { createUseClassNames, css, cx } from "useClassNames";
 
 type CellState = "X" | "O" | "";
 
@@ -42,6 +43,25 @@ function getIsGameWon(cellStates: CellState[]): boolean {
 
 }
 
+const { useClassNames } = createUseClassNames<{ isGameWon: boolean; }>()(
+    ({ theme }, { isGameWon }) => ({
+        "root": {
+            "display": "flex",
+            "flexDirection": "column",
+            "alignItems": "center"
+        },
+        "ul": {
+            "display": "grid",
+            "gridTemplateColumns": "repeat(3, 1fr)",
+            "backgroundColor": theme.primaryColor,
+            "gridGap": 3,
+            "border": "solid black 3px",
+            "width": 400,
+            "pointerEvents": isGameWon ? "none" : "unset"
+        }
+    })
+);
+
 export const TicTacTow = memo(() => {
 
     const [playerTurn, setPlayerTurn] = useState<Exclude<CellState, "">>("X");
@@ -74,15 +94,11 @@ export const TicTacTow = memo(() => {
 
     };
 
+    const { classNames } = useClassNames({ isGameWon });
+
     return (
-        <div style={{
-            "display": "flex",
-            "flexDirection": "column",
-            "alignItems": "center"
-        }}>
-            <h2 style={{
-                "color": "blue"
-            }}>
+        <div className={classNames.root}>
+            <h2 className={css({ "color": "blue" })}>
                 {
                     isGameWon ?
                         `game won by ${playerTurn}` :
@@ -90,18 +106,11 @@ export const TicTacTow = memo(() => {
                 }
             </h2>
 
-            <div style={{
-                "display": "grid",
-                "gridTemplateColumns": "repeat(3, 1fr)",
-                "backgroundColor": "black",
-                "gridGap": "3px",
-                "border": "solid black 3px",
-                "width": "400px",
-                "pointerEvents": isGameWon ? "none" : "unset"
-            }}>
+            <div className={classNames.ul}>
                 {
                     [0, 1, 2, 3, 4, 5, 6, 7, 8].map(cellIndex =>
                         <Cell
+                            className={css({ "height": 40 })}
                             key={cellIndex}
                             cellState={cellStates[cellIndex]}
                             onClick={() => onCellClick(cellIndex)}
@@ -115,31 +124,45 @@ export const TicTacTow = memo(() => {
     )
 });
 
-type CellProps = {
-    cellState: CellState;
-    onClick(): void;
-};
+const { Cell } = (() => {
 
-const Cell = memo((props: CellProps) => {
+    type Props = {
+        cellState: CellState;
+        onClick(): void;
+        className?: string;
+    };
 
-    const { onClick, cellState } = props;
+    const { useClassNames } = createUseClassNames()(
+        () => ({
+            "root": {
+                "display": "flex",
+                "alignItems": "center",
+                "justifyContent": "center",
+                "backgroundColor": "white"
+            }
+        })
+    );
 
-    return (
-        <div
-            onClick={onClick}
-            style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "40px",
-                backgroundColor: "white"
-            }}
-        >
+    const Cell = memo((props: Props) => {
 
-            <h1> {cellState} </h1>
+        const { onClick, cellState, className } = props;
+
+        const { classNames } = useClassNames({});
+
+        return (
+            <div
+                onClick={onClick}
+                className={cx(classNames.root, className)}
+            >
+
+                <h1> {cellState} </h1>
 
 
 
-        </div>
-    )
-});
+            </div>
+        )
+    });
+
+    return { Cell };
+
+})();

@@ -73,7 +73,7 @@ export const TicTacTow = ()=>{
     const isGameWon = useMemo(()=> getIsGameWon(cellStates), [cellStates]);
 
 
-    const onClick = useCallbackFactory(([cellNumber]: [number])=>{
+    const onClickFactory = useCallbackFactory(([cellNumber]: [number])=>{
 
         cellStates[cellNumber] = currentPlayer;
 
@@ -117,7 +117,7 @@ export const TicTacTow = ()=>{
                 {
                     [0,1,2,3,4,5,6,7,8].map(cellNumber => 
                         <Cell 
-                            onClick={onClick(cellNumber)}
+                            onClick={onClickFactory(cellNumber)}
                             cellState={cellStates[cellNumber]}
                             key={cellNumber}
                         />
@@ -153,7 +153,8 @@ const Cell = memo((props: CellProps)=>{
             alignItems: "center",
             justifyContent: "center",
             height: "40px",
-            backgroundColor: "white"
+            backgroundColor: "white",
+            "cursor": "pointer"
         }}>
 
             <h1>
