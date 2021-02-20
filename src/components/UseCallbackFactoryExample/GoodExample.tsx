@@ -75,9 +75,19 @@ export const TicTacTow = ()=>{
 
     const onClickFactory = useCallbackFactory(([cellNumber]: [number])=>{
 
+        /*
         cellStates[cellNumber] = currentPlayer;
 
         setCellStates([...cellStates]);
+        */
+
+        setCellStates((()=>{
+
+            const newCellState = [...cellStates];
+            newCellState[cellNumber] = currentPlayer;
+            return newCellState;
+
+        })())
 
         setPlayerPlaying(currentPlayer === "X" ? "O" : "X");
 

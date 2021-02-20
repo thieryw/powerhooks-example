@@ -79,6 +79,7 @@ export const TicTacTow = memo(() => {
 
     const onCellClick = (cellIndex: number) => {
 
+
         setCellStates(
             cellStates.map(
                 (cellState, index) =>
