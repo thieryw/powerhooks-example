@@ -9,6 +9,7 @@ import reportWebVitals from './reportWebVitals';
 import {TicTacTow as BadExample} from "./components/UseCallbackFactoryExample/BadExample";
 import {TicTacTow as GoodExample} from "./components/UseCallbackFactoryExample/GoodExample";
 
+
 ReactDOM.render(
   <React.StrictMode>
 
@@ -22,6 +23,7 @@ ReactDOM.render(
     <BadExample />
     <GoodExample />
 
+    
   </div>
 
 

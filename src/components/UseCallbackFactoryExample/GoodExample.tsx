@@ -1,4 +1,4 @@
-import {useState, useCallback, memo, useMemo} from "react";
+import {useState, memo, useMemo} from "react";
 import {useCallbackFactory} from "powerhooks/useCallbackFactory";
 
 
@@ -69,9 +69,8 @@ export const TicTacTow = ()=>{
 
     const [currentPlayer, setPlayerPlaying] = useState<Exclude<CellState, "">>("X");
 
-    const isGameWon = useMemo(()=>
-        getIsGameWon(cellStates)
-    ,[cellStates]);
+
+    const isGameWon = useMemo(()=> getIsGameWon(cellStates), [cellStates]);
 
 
     const onClick = useCallbackFactory(([cellNumber]: [number])=>{
@@ -119,7 +118,7 @@ export const TicTacTow = ()=>{
                     [0,1,2,3,4,5,6,7,8].map(cellNumber => 
                         <Cell 
                             onClick={onClick(cellNumber)}
-                            currentPlayer={currentPlayer}
+                            cellState={cellStates[cellNumber]}
                             key={cellNumber}
                         />
                     )
@@ -134,28 +133,22 @@ export const TicTacTow = ()=>{
 
 type CellProps = {
     onClick(): void;
-    currentPlayer: CellState;
+    cellState: CellState;
 }
 
 
 const Cell = memo((props: CellProps)=>{
 
-    const {onClick, currentPlayer} = props;
+    const {onClick, cellState} = props;
 
-    const [cellState, setCellState] = useState<CellState>("");
 
     console.log("box render");
 
-    const onCellClick = useCallback(()=>{
-        setCellState(currentPlayer);
-        onClick();
-
-    },[currentPlayer, onClick]);
 
     
 
     return(
-        <div onClick={onCellClick} style={{
+        <div onClick={onClick} style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
