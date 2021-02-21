@@ -2,12 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-//import {UseDomRectExample} from "./components/UseDomRectExample";
-//import {UseWindowInnerSizeExample} from "./components/UseWindowInnerSizeExample";
-//import {UseNamedStateExample} from "./components/UseNamedStateExample";
-//import {UseClickExample} from "./components/UseClickExample";
-import {TicTacTow as BadExample} from "./components/UseCallbackFactoryExample/BadExample";
-import {TicTacTow as GoodExample} from "./components/UseCallbackFactoryExample/GoodExample";
+import {TodoList} from "components/UseCallbackFactoryExample/TodoList";
 
 
 ReactDOM.render(
@@ -20,8 +15,8 @@ ReactDOM.render(
   <div>
     <h1>useCallbackFactory</h1>
 
-    <BadExample />
-    <GoodExample />
+
+    <TodoList />
 
     
   </div>
