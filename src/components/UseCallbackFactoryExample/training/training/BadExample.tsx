@@ -1,7 +1,9 @@
-import { memo, useEffect, useState, useCallback} from "react";
+import { memo, useEffect, useState} from "react";
+import {useConstCallback} from "powerhooks/useConstCallback";
+import {useCallbackFactory} from "powerhooks/useCallbackFactory";
+import {useArrayDiff} from "powerhooks/useArrayDiff";
 
-
-export const BadExample = ()=>{
+/*export const BadExample = ()=>{
 
 
 
@@ -96,12 +98,10 @@ const Cell = memo((props: CellProps)=>{
             
         </div>
     )
-})
+}) */
 
 
-
-
-/*type Props = {
+type Props = {
   priority: number;
   task: string;
   onClick(action: "DELETE" | "EDIT"): void;
@@ -175,7 +175,7 @@ export const UseCallbackFactoryExample = () => {
   );*/
   
 
-/*
+
   const onClickFactory = useCallbackFactory(
     (
       [task, priority]: [string, number],
@@ -226,4 +226,4 @@ const MyButton = memo((props: MyButtonProps) => {
     <button onClick={onClick}>{text}</button>
   );
 
-});*/
+});
