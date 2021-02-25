@@ -190,6 +190,10 @@ export const TodoList = ()=>{
     })
 
     const deleteSelectedTasks = useConstCallback(()=>{
+        
+        setTasks(
+            tasks.filter(()=>{})
+        )
 
 
         setTasks((
@@ -290,18 +294,23 @@ export const TodoList = ()=>{
         if(indexOfTaskInEditingMod !== undefined){
             return;
         };
+             
+        setTasck((()=>{
+            
+            const newTask =[...tasks];
+            
+            selectedTaskIds
+                .map(selectedTaskId=> tasks.findIndex(task => task.id === selectedTaskId))   
+                .forEach(index => 
+                    tasks[index].isTaskValidated = !tasks[index].isTaskValidated;
+                );
+            
+            return newTask;
+            
+             
+        })());
         
-        setTasks((
-            selectedTaskIds.forEach(selectedTaskId => {
-
-                const index = tasks.findIndex(task => task.id === selectedTaskId);
-
-                tasks[index].isTaskValidated = !tasks[index].isTaskValidated;
-
-
-            }),
-            [...tasks]
-        ))
+        
 
     });
 
