@@ -1,6 +1,6 @@
 
-import { createUseClassNamesFactory } from "./tools/@emotion_jss";
-export { css, cx, keyframes } from "./tools/@emotion_jss";
+import { createUseClassNamesFactory } from "jss-emotion";
+export { css, cx, keyframes } from "jss-emotion";
 
 const theme = {
     "primaryColor": "blue"

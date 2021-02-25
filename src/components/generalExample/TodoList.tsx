@@ -1,14 +1,15 @@
-import {memo, useMemo, useEffect} from "react";
+import {useMemo} from "react";
 import {createUseClassNames} from "useClassNames";
 import {useConstCallback} from "powerhooks/useConstCallback";
 import {useCallbackFactory} from "powerhooks/useCallbackFactory";
 import {useNamedState} from "powerhooks/useNamedState";
-import {useClick} from "powerhooks/useClick";
+import {TaskComponent} from "./Task";
 
-type Task = {
+export type Task = {
     description: string;
     isSelected: boolean;
     isInEditingMod: boolean;
+    isTaskValidated: boolean;
     id: string;
 }
 
@@ -18,8 +19,8 @@ function generateTaskId(){
     const idLength = 15;
     let randomString = "";
     for(let i=0; i<idLength; i++){
-        const char = Math.floor(Math.random() * chars.length);
-        randomString += chars.substring(char, char+1);
+        const charIndex = Math.floor(Math.random() * chars.length);
+        randomString += chars.substring(charIndex, charIndex+1);
     };
 
     return randomString;
@@ -66,14 +67,16 @@ export const TodoList = ()=>{
             "description": "make a cake",
             "isSelected": false,
             "id": generateTaskId(),
-            "isInEditingMod": false
+            "isInEditingMod": false,
+            "isTaskValidated": false
 
         },
         {
             "description": "piano practice",
             "isSelected": false,
             "id": generateTaskId(),
-            "isInEditingMod": false
+            "isInEditingMod": false,
+            "isTaskValidated": false
 
 
         }
@@ -115,7 +118,8 @@ export const TodoList = ()=>{
                 "description": textInput,
                 "isSelected": false,
                 "id": generateTaskId(),
-                "isInEditingMod": false
+                "isInEditingMod": false,
+                "isTaskValidated": false
             }),
             [...tasks]
         ));
@@ -201,7 +205,7 @@ export const TodoList = ()=>{
         setSelectedTaskIds([]);
     });
 
-    const selectOrClearAllFactory = 
+    const selectOrClearAllTasksFactory = 
         useCallbackFactory(([mode]: ["select" | "clear"])=>{
 
             if(indexOfTaskInEditingMod !== undefined){
@@ -239,7 +243,10 @@ export const TodoList = ()=>{
 
     const setSelectedTaskToEditionMod = useConstCallback(()=>{
 
-        console.assert(selectedTaskIds.length === 1);
+
+        if(selectedTaskIds.length !== 1){
+            return;
+        }
 
         
         setTasks((
@@ -278,6 +285,28 @@ export const TodoList = ()=>{
     )
 
 
+    const toggleTaskValidation = useConstCallback(()=>{
+
+        if(indexOfTaskInEditingMod !== undefined){
+            return;
+        };
+        
+        setTasks((
+            selectedTaskIds.forEach(selectedTaskId => {
+
+                const index = tasks.findIndex(task => task.id === selectedTaskId);
+
+                tasks[index].isTaskValidated = !tasks[index].isTaskValidated;
+
+
+            }),
+            [...tasks]
+        ))
+
+    });
+
+
+
 
     const {classNames} = useClassNames({});
 
@@ -295,19 +324,17 @@ export const TodoList = ()=>{
                 <button 
                     onClick={deleteSelectedTasks}
                     disabled={selectedTaskIds.length === 0}
-
-
                 >
                     {`Delete Task${selectedTaskIds.length > 1 ? "s" : ""}`}
                 </button>
                 <button 
-                    onClick={selectOrClearAllFactory("select")}
+                    onClick={selectOrClearAllTasksFactory("select")}
                     disabled={tasks.length === 0}
                 >
                     Select All
                 </button>
                 <button 
-                    onClick={selectOrClearAllFactory("clear")}
+                    onClick={selectOrClearAllTasksFactory("clear")}
                     disabled={selectedTaskIds.length === 0}
                 >
                     {`Clear Selected Task${selectedTaskIds.length > 1 ? "s" : ""}`}
@@ -318,6 +345,13 @@ export const TodoList = ()=>{
                 >
                     Edit Task
                 </button>
+                <button
+                    onClick={toggleTaskValidation}
+                    disabled={selectedTaskIds.length < 1 || indexOfTaskInEditingMod !== undefined}
+
+                >
+                    Toggle Task Validation
+                </button>
             </div>
 
 
@@ -325,13 +359,14 @@ export const TodoList = ()=>{
                 {
                     tasks.map((task, index) => 
                         <TaskComponent
-                            key={`${task}${index}`}
+                            key={task.id}
                             description={task.description}
                             onClick={onClickFactory(index)}
                             onDoubleClick={onDoubleClickFactory(index)}
                             isSelected={tasks[index].isSelected}
                             isInEditingMod={tasks[index].isInEditingMod}
                             editTask={editTaskFactory(index)}
+                            isTaskValidated={task.isTaskValidated}
                         />).reverse()
 
                 }
@@ -344,101 +379,3 @@ export const TodoList = ()=>{
 }
 
 
-const {TaskComponent} = (()=>{
-
-    const {useClassNames} = createUseClassNames<{isTaskSelected: boolean}>()(
-        (...[, {isTaskSelected}])=>({
-            "root": {
-                "listStyle": "none",
-                "backgroundColor": isTaskSelected ? "blue" : "lightblue",
-                "color": isTaskSelected ? "white" : "unset",
-                "marginBlock": 0,
-                "wordBreak": "break-all",
-                "padding": "10px 10px 10px 30px",
-                "margin": 10
-
-            }
-        })
-    )
-
-
-    type Props = {
-        description: Task["description"]
-        isSelected: Task["isSelected"];
-        isInEditingMod: Task["isInEditingMod"];
-        editTask(args: {
-            e: React.FormEvent<HTMLFormElement>;
-            textInput: string;
-        }): void;
-        onClick(): void;
-        onDoubleClick(): void;
-    }
-
-    const TaskComponent = memo((props: Props)=>{
-        console.log("render task");
-
-        
-        const {description, onClick, onDoubleClick, editTask, isSelected, isInEditingMod} = props;
-        const {setTextInput, textInput} = 
-            useNamedState<string, "textInput">("textInput", "");
-
-        const onChange = useConstCallback(
-            (e: React.ChangeEvent<HTMLInputElement>)=>{
-                setTextInput(e.target.value);
-            }
-        )
-       
-        const onEditSubmit = useConstCallback(
-            (e: React.FormEvent<HTMLFormElement>)=>{
-                editTask({e, textInput})
-                setTextInput("");
-            }
-        );
-
-
-        
-
-        useEffect(()=> {
-            if(textInput === ""){
-                return;
-            }
-            setTextInput("");
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        },[isInEditingMod]);
-
-        const {getOnMouseProps} = useClick({
-            "doubleClickDelayMs": 500,
-            "callback": ({type})=>{
-                switch(type){
-                    case "down" : onClick(); break;
-                    case "double": onDoubleClick(); 
-                }
-
-            }
-        })
-
-
-        
-        const {classNames} = useClassNames({"isTaskSelected": isSelected});
-        return (
-            <li                     
-                {...getOnMouseProps()}
-                className={classNames.root}
-            >
-                {isInEditingMod ? <form onSubmit={onEditSubmit} >
-                    <input 
-                        autoFocus 
-                        onChange={onChange} 
-                        value={textInput} 
-                        type="text"
-                    />
-                </form> : description}
-            </li>
-        )
-
-    });
-
-    return {TaskComponent};
-
-
-})()

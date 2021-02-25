@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {TodoList} from "components/UseCallbackFactoryExample/TodoList";
+import {TodoList} from "components/generalExample/TodoList";
 
 
 ReactDOM.render(

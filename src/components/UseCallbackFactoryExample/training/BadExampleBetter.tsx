@@ -44,7 +44,7 @@ function getIsGameWon(cellStates: CellState[]): boolean {
 }
 
 const { useClassNames } = createUseClassNames<{ isGameWon: boolean; }>()(
-    ({ theme }, { isGameWon }) => ({
+    (...[, {isGameWon}]) => ({
         "root": {
             "display": "flex",
             "flexDirection": "column",
@@ -53,7 +53,6 @@ const { useClassNames } = createUseClassNames<{ isGameWon: boolean; }>()(
         "ul": {
             "display": "grid",
             "gridTemplateColumns": "repeat(3, 1fr)",
-            "backgroundColor": theme.primaryColor,
             "gridGap": 3,
             "border": "solid black 3px",
             "width": 400,

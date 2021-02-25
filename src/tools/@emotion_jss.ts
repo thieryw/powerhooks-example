@@ -1,6 +1,6 @@
 
 
-import "minimal-polyfills/Object.fromEntries";
+/*import "minimal-polyfills/Object.fromEntries";
 import { css, cx, keyframes } from "@emotion/css";
 import type { CSSObject } from "@emotion/css";
 import { objectKeys } from "evt/tools/typeSafety/objectKeys";
@@ -27,7 +27,7 @@ import { objectKeys } from "evt/tools/typeSafety/objectKeys";
  * }
  * 
  */
-export function createUseClassNamesFactory<Theme extends Object = {}>(
+/*export function createUseClassNamesFactory<Theme extends Object = {}>(
     params: {
         useTheme(): Theme;
     }
@@ -68,6 +68,7 @@ export function createUseClassNamesFactory<Theme extends Object = {}>(
 
 
 
-export { css, cx, keyframes };
+export { css, cx, keyframes };*/
 
+export {}
 
