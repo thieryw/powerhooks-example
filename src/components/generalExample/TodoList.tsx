@@ -8,7 +8,7 @@ import {TaskComponent} from "./Task";
 export type Task = {
     description: string;
     isSelected: boolean;
-    isInEditingMod: boolean;
+    isInEditingState: boolean;
     isTaskValidated: boolean;
     id: string;
 }
