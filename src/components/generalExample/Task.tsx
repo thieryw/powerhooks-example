@@ -22,15 +22,12 @@ const {useClassNames} = createUseClassNames<{isTaskSelected: boolean; isTaskVali
 )
 
 
-type Props = {
-    description: Task["description"]
-    isSelected: Task["isSelected"];
-    isInEditingMod: Task["isInEditingMod"];
-    isTaskValidated: Task["isTaskValidated"];
-    editTask(args: {
-        e: React.FormEvent<HTMLFormElement>;
-        textInput: string;
-    }): void;
+type Props = Omit<Task,"id"> & {
+    onEditTask(
+        params: {
+           newDescription: string;
+        }
+    ): void;
     onClick(): void;
     onDoubleClick(): void;
 }
@@ -43,28 +40,26 @@ export const TaskComponent = memo((props: Props)=>{
         onDoubleClick, 
         editTask, 
         isSelected, 
-        isInEditingMod,
+        isInEditingState,
         isTaskValidated
     } = props;
     const {setTextInput, textInput} = 
         useNamedState<string, "textInput">("textInput", "");
 
     const onChange = useConstCallback(
-        (e: React.ChangeEvent<HTMLInputElement>)=>{
-            setTextInput(e.target.value);
-        })
+        (e: React.ChangeEvent<HTMLInputElement>)=>
+            setTextInput(e.target.value)
+   )
 
     const onEditSubmit = useConstCallback(
         (e: React.FormEvent<HTMLFormElement>)=>{
-            editTask({e, textInput})
+            e.preventDefault();
+            editTask({"newDescription": textInput})
             setTextInput("");
         }
     );
 
      useEffect(()=> {
-        if(textInput === ""){
-            return;
-        }
         setTextInput("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[isInEditingMod]);
@@ -74,27 +69,33 @@ export const TaskComponent = memo((props: Props)=>{
         "callback": ({type})=>{
             switch(type){
                 case "down" : onClick(); break;
-                case "double": onDoubleClick(); 
+                case "double": onDoubleClick(); break;
             }
 
          }
     })
-     const {classNames} = useClassNames(
-            {"isTaskSelected": isSelected, "isTaskValidated": isTaskValidated}
-        );
+     const {classNames} = useClassNames({
+         "isTaskSelected": isSelected, 
+         isTaskValidated
+     });
      return (
         <li                     
             {...getOnMouseProps()}
             className={classNames.root}
         >
-            {isInEditingMod ? <form onSubmit={onEditSubmit} >
-                <input 
-                    autoFocus 
-                    onChange={onChange} 
-                    value={textInput} 
-                    type="text"
-                />
-            </form> : description}
+            {
+                 isInEditingState ? 
+                     <form onSubmit={onEditSubmit} >
+                        <input 
+                            autoFocus 
+                            onChange={onChange} 
+                            value={textInput} 
+                            type="text"
+                        />
+                    </form> 
+                    : 
+                    description
+            }
         </li>
     )
 
