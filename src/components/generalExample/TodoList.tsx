@@ -67,7 +67,7 @@ export const TodoList = ()=>{
             "description": "make a cake",
             "isSelected": false,
             "id": generateTaskId(),
-            "isInEditingMod": false,
+            "isInEditingState": false,
             "isTaskValidated": false
 
         },
@@ -75,7 +75,7 @@ export const TodoList = ()=>{
             "description": "piano practice",
             "isSelected": false,
             "id": generateTaskId(),
-            "isInEditingMod": false,
+            "isInEditingState": false,
             "isTaskValidated": false
 
 
@@ -85,7 +85,7 @@ export const TodoList = ()=>{
 
     const indexOfTaskInEditingMod: number | undefined = useMemo(
         () => {
-            const out = tasks.findIndex(task => task.isInEditingMod);
+            const out = tasks.findIndex(task => task.isInEditingState);
 
             if(out === -1){
                 return undefined;
@@ -118,7 +118,7 @@ export const TodoList = ()=>{
                 "description": textInput,
                 "isSelected": false,
                 "id": generateTaskId(),
-                "isInEditingMod": false,
+                "isInEditingState": false,
                 "isTaskValidated": false
             }),
             [...tasks]
@@ -131,13 +131,13 @@ export const TodoList = ()=>{
 
     const onClickFactory = useCallbackFactory(([taskIndex]: [number])=>{
 
-        if(tasks[taskIndex].isInEditingMod){
+        if(tasks[taskIndex].isInEditingState){
             return;
         }
 
         if(indexOfTaskInEditingMod !== undefined){
 
-            tasks[indexOfTaskInEditingMod].isInEditingMod = false;
+            tasks[indexOfTaskInEditingMod].isInEditingState = false;
 
         }
 
@@ -150,35 +150,31 @@ export const TodoList = ()=>{
 
             const out: string[] = [];
 
-            tasks.forEach(task =>{
-                if(!task.isSelected){
-                    return;
-                }
-
-                out.push(task.id);
-            })
+            tasks.filter(task => task.isSelected)
+                .forEach(task => out.push(task.id));
 
             return out;
         })());
 
     });
 
-    const onDoubleClickFactory = useCallbackFactory(([taskIndex]: [number])=>{
+    const onDoubleClickFactory = useCallbackFactory(
+        (
+            [taskIndex]: [number]
+        )=>{
 
         setSelectedTaskIds([tasks[taskIndex].id]);
 
         setTasks((()=>{
             if(indexOfTaskInEditingMod !== undefined){
-                tasks[indexOfTaskInEditingMod].isInEditingMod = false;
+                tasks[indexOfTaskInEditingMod].isInEditingState = false;
             }
 
-            tasks.forEach(task => {
-                if(task.isSelected){
-                    task.isSelected = false;
-                }
-            })
 
-            tasks[taskIndex].isInEditingMod = true;
+            tasks.filter(task => task.isSelected)
+                .forEach(task => task.isSelected = false);
+
+            tasks[taskIndex].isInEditingState = true;
             tasks[taskIndex].isSelected = true;
         
 
@@ -191,29 +187,18 @@ export const TodoList = ()=>{
 
     const deleteSelectedTasks = useConstCallback(()=>{
         
-        setTasks(
-            tasks.filter(()=>{})
-        )
 
-
-        setTasks((
-            selectedTaskIds.forEach(selectedTaskId => {
-
-                tasks.splice(tasks.findIndex(
-                    task => task.id === selectedTaskId),1);
-
-            }),
-            [...tasks]
-        ));
+        setTasks(tasks.filter(task => !task.isSelected));
 
         setSelectedTaskIds([]);
+
     });
 
     const selectOrClearAllTasksFactory = 
         useCallbackFactory(([mode]: ["select" | "clear"])=>{
 
             if(indexOfTaskInEditingMod !== undefined){
-                tasks[indexOfTaskInEditingMod].isInEditingMod = false;
+                tasks[indexOfTaskInEditingMod].isInEditingState = false;
             }
 
 
@@ -245,7 +230,7 @@ export const TodoList = ()=>{
         }
     );
 
-    const setSelectedTaskToEditionMod = useConstCallback(()=>{
+    const setSelectedTaskToEditionState = useConstCallback(()=>{
 
 
         if(selectedTaskIds.length !== 1){
@@ -256,31 +241,29 @@ export const TodoList = ()=>{
         setTasks((
             tasks[
                 tasks.findIndex(task => task.id === selectedTaskIds[0])
-            ].isInEditingMod = true,
+            ].isInEditingState = true,
             [...tasks]
         ));
         
     });
 
-    const editTaskFactory = useCallbackFactory(
+    const onEditTaskFactory = useCallbackFactory(
         (
             [indexOfTaskBeingEdited]: [number | undefined],
             [args]: [{
-                e: React.FormEvent<HTMLFormElement>;
-                textInput: string;
+                newDescription: string;
             }]
         )=>{
 
-            const {e, textInput} = args;
+            const {newDescription} = args;
 
-            e.preventDefault();
-            if(textInput === "" || indexOfTaskBeingEdited === undefined){
+            if(newDescription === "" || indexOfTaskBeingEdited === undefined){
                 return;
             }
 
             setTasks((
-                tasks[indexOfTaskBeingEdited].description = textInput,
-                tasks[indexOfTaskBeingEdited].isInEditingMod = false,
+                tasks[indexOfTaskBeingEdited].description = newDescription,
+                tasks[indexOfTaskBeingEdited].isInEditingState = false,
                 [...tasks]
             ));
 
@@ -294,24 +277,20 @@ export const TodoList = ()=>{
         if(indexOfTaskInEditingMod !== undefined){
             return;
         };
-             
-        setTasck((()=>{
-            
-            const newTask =[...tasks];
-            
-            selectedTaskIds
-                .map(selectedTaskId=> tasks.findIndex(task => task.id === selectedTaskId))   
-                .forEach(index => 
-                    tasks[index].isTaskValidated = !tasks[index].isTaskValidated;
-                );
-            
-            return newTask;
-            
-             
-        })());
-        
-        
 
+        setTasks((()=>{
+
+            const newTasks = [...tasks];
+
+            selectedTaskIds.map(selectedTaskId => 
+                tasks.findIndex(tasks => tasks.id === selectedTaskId)
+            ).forEach(
+                index => newTasks[index].isTaskValidated = !newTasks[index].isTaskValidated
+            );
+
+            return[...newTasks];
+        })())
+        
     });
 
 
@@ -349,7 +328,7 @@ export const TodoList = ()=>{
                     {`Clear Selected Task${selectedTaskIds.length > 1 ? "s" : ""}`}
                 </button>
                 <button
-                    onClick={setSelectedTaskToEditionMod}
+                    onClick={setSelectedTaskToEditionState}
                     disabled={selectedTaskIds.length !== 1 || indexOfTaskInEditingMod !== undefined}
                 >
                     Edit Task
@@ -373,8 +352,8 @@ export const TodoList = ()=>{
                             onClick={onClickFactory(index)}
                             onDoubleClick={onDoubleClickFactory(index)}
                             isSelected={tasks[index].isSelected}
-                            isInEditingMod={tasks[index].isInEditingMod}
-                            editTask={editTaskFactory(index)}
+                            isInEditingState={tasks[index].isInEditingState}
+                            onEditTask={onEditTaskFactory(index)}
                             isTaskValidated={task.isTaskValidated}
                         />).reverse()
 

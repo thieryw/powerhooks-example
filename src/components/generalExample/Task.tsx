@@ -1,5 +1,5 @@
 import {Task} from "./TodoList";
-import {memo, useEffect} from "react";
+import {memo, useEffect, useRef} from "react";
 import {useNamedState} from "powerhooks/useNamedState";
 import {useConstCallback} from "powerhooks/useConstCallback";
 import {createUseClassNames} from "useClassNames";
@@ -17,7 +17,7 @@ const {useClassNames} = createUseClassNames<{isTaskSelected: boolean; isTaskVali
             "margin": 10,
             "textDecoration": `${isTaskValidated ? "line-through" : "unset"}`
 
-        }
+        },
     })
 )
 
@@ -38,13 +38,15 @@ export const TaskComponent = memo((props: Props)=>{
         description, 
         onClick, 
         onDoubleClick, 
-        editTask, 
+        onEditTask, 
         isSelected, 
         isInEditingState,
         isTaskValidated
     } = props;
     const {setTextInput, textInput} = 
-        useNamedState<string, "textInput">("textInput", "");
+        useNamedState<string, "textInput">("textInput", description);
+
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const onChange = useConstCallback(
         (e: React.ChangeEvent<HTMLInputElement>)=>
@@ -54,15 +56,20 @@ export const TaskComponent = memo((props: Props)=>{
     const onEditSubmit = useConstCallback(
         (e: React.FormEvent<HTMLFormElement>)=>{
             e.preventDefault();
-            editTask({"newDescription": textInput})
+            onEditTask({"newDescription": textInput})
             setTextInput("");
         }
     );
 
-     useEffect(()=> {
-        setTextInput("");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[isInEditingMod]);
+    useEffect(()=> {
+        setTextInput(description);
+        if(!inputRef.current){
+            return;
+        }
+
+        inputRef.current.select();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[isInEditingState]);
 
      const {getOnMouseProps} = useClick({
         "doubleClickDelayMs": 200,
@@ -91,6 +98,8 @@ export const TaskComponent = memo((props: Props)=>{
                             onChange={onChange} 
                             value={textInput} 
                             type="text"
+                            ref={inputRef}
+                            
                         />
                     </form> 
                     : 
