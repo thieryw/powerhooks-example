@@ -13,7 +13,7 @@
     "@types/react-dom": "^17.0.0",
     "jss-emotion": "^0.0.5",
     "minimal-polyfills": "^2.1.6",
-    "powerhooks": "^0.0.9",
+    "powerhooks": "^0.0.13",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.2",

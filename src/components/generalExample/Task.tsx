@@ -5,7 +5,7 @@ import {useConstCallback} from "powerhooks/useConstCallback";
 import {createUseClassNames} from "useClassNames";
 import {useClick} from "powerhooks/useClick";
 
-const {useClassNames} = createUseClassNames<{isTaskSelected: boolean; isTaskValidated: boolean}>()(
+/*const {useClassNames} = createUseClassNames<{isTaskSelected: boolean; isTaskValidated: boolean}>()(
     (...[, {isTaskSelected, isTaskValidated}])=>({
         "root": {
             "listStyle": "none",
@@ -18,6 +18,26 @@ const {useClassNames} = createUseClassNames<{isTaskSelected: boolean; isTaskVali
             "textDecoration": `${isTaskValidated ? "line-through" : "unset"}`
 
         },
+    })
+)*/
+
+const {useClassNames} = createUseClassNames<{isTaskSelected: boolean; isTaskValidated: boolean}>()(
+    (theme, {isTaskSelected, isTaskValidated})=>({
+
+        "root": {
+            "listStyle": "none",
+            "backgroundColor": isTaskSelected ? "blue" : "lightblue",
+            "color": isTaskSelected ? "white" : "unset",
+            "marginBlock": 0,
+            "wordBreak": "break-all",
+            "padding": "10px 10px 10px 30px",
+            "margin": 10,
+            "textDecoration": `${isTaskValidated ? "line-through" : "unset"}`
+
+
+        }
+
+
     })
 )
 

@@ -8858,10 +8858,10 @@ postcss@^8.1.0:
     nanoid "^3.1.20"
     source-map "^0.6.1"
 
-powerhooks@^0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/powerhooks/-/powerhooks-0.0.9.tgz#81fb66bf46934183238dbb974d86ea20bd6c7c2b"
-  integrity sha512-7XXGMA0MJZf3/jKTSzZnEe+NELFv9wrv4gD78icbAh2H/mOL7SnaZmjtbzS3XXIKLIeSTY6+5QOx+xeoTl1dCQ==
+powerhooks@^0.0.13:
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/powerhooks/-/powerhooks-0.0.13.tgz#4c58da69ada231fe579d6d2f22957490579e4c5f"
+  integrity sha512-++fJro/8kauc9mgwS2FPhuWFobMAsNNRkOu55OxgUtGEsHmImKAkqk+Qu/YIxggMWHmmdjs+zNzCGyOi/VoZ4A==
   dependencies:
     evt "2.0.0-beta.12"
     memoizee "^0.4.15"
