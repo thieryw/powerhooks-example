@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {TodoList} from "components/generalExample/TodoList";
+//import {TodoList} from "components/generalExample/TodoList";
+import {UseCallbackFactoryExample} from "./components/UseCallbackFactoryExample";
 
 
 ReactDOM.render(
@@ -13,10 +14,11 @@ ReactDOM.render(
 
 
   <div>
-    <h1>useCallbackFactory</h1>
+    <UseCallbackFactoryExample />
 
 
-    <TodoList />
+
+
 
     
   </div>

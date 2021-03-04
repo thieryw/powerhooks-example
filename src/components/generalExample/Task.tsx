@@ -91,24 +91,32 @@ export const TaskComponent = memo((props: Props)=>{
         // eslint-disable-next-line react-hooks/exhaustive-deps
     },[isInEditingState]);
 
-     const {getOnMouseProps} = useClick({
+
+
+
+
+    
+
+    const {getOnMouseProps} = useClick({
         "doubleClickDelayMs": 200,
         "callback": ({type})=>{
             switch(type){
-                case "down" : onClick(); break;
+                case "down": onClick(); break;
                 case "double": onDoubleClick(); break;
             }
 
-         }
+        }
     })
-     const {classNames} = useClassNames({
-         "isTaskSelected": isSelected, 
-         isTaskValidated
-     });
+    
+
+    const {classNames} = useClassNames({
+        "isTaskSelected": isSelected, 
+        isTaskValidated
+    });
      return (
         <li                     
-            {...getOnMouseProps()}
             className={classNames.root}
+            {...getOnMouseProps()}
         >
             {
                  isInEditingState ? 

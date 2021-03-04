@@ -4,7 +4,6 @@ import {useConstCallback} from "powerhooks/useConstCallback";
 import {useCallbackFactory} from "powerhooks/useCallbackFactory";
 import {useNamedState} from "powerhooks/useNamedState";
 import {TaskComponent} from "./Task";
-import {useIsDarkModeEnabled} from "tools/useIsDarkModeEnabled";
 
 export type Task = {
     description: string;
@@ -30,8 +29,8 @@ function generateTaskId(){
 
 }
 
-const {useClassNames} = createUseClassNames<{isDarkModeEnabled: boolean}>()(
-    (...[, {isDarkModeEnabled}])=> ({
+const {useClassNames} = createUseClassNames()(
+    ()=> ({
         "root": {
             "display": "flex",
             "flexDirection": "column",
@@ -40,8 +39,6 @@ const {useClassNames} = createUseClassNames<{isDarkModeEnabled: boolean}>()(
                 "paddingInline": 0,
                 "width": 400
             },
-            "backgroundColor": `${isDarkModeEnabled ? "darkblue" : "beige"}`,
-            "color": `${isDarkModeEnabled ? "white" : "black"}`
 
         },
         "buttonWrapper": {
@@ -66,12 +63,11 @@ export const TodoList = ()=>{
     const {setTextInput, textInput} = 
         useNamedState<string, "textInput">("textInput", "");
 
-    const {isDarkModeEnabled} = useIsDarkModeEnabled();
 
 
     const {setTasks, tasks} = useNamedState<Task[], "tasks">("tasks", [
         {
-            "description": "make a cake",
+            "description": "clean the house",
             "isSelected": false,
             "id": generateTaskId(),
             "isInEditingState": false,
@@ -303,7 +299,7 @@ export const TodoList = ()=>{
 
 
 
-    const {classNames} = useClassNames({isDarkModeEnabled});
+    const {classNames} = useClassNames({});
 
 
     return (
