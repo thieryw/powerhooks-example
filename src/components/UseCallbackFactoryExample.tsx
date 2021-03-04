@@ -28,10 +28,13 @@ export const UseCallbackFactoryExample = ()=>{
             return;
         }
 
-        setTasks((
-            tasks[taskIndex].isInEditingState = true,
-            [...tasks]
-        ))
+        setTasks((()=>{
+            const newTasks = [...tasks];
+
+            newTasks[taskIndex].isInEditingState = true;
+
+            return newTasks;
+        })());
 
     });
 
@@ -45,11 +48,20 @@ export const UseCallbackFactoryExample = ()=>{
         )=>{
             const {newDescription} = params;
 
-            setTasks((
-                tasks[taskIndex].description = newDescription,
-                tasks[taskIndex].isInEditingState = false,
-                [...tasks]
-            ));
+            setTasks((()=>{
+
+                const newTasks = [...tasks];
+
+                newTasks[taskIndex].description = newDescription;
+                newTasks[taskIndex].isInEditingState = false;
+
+
+                return newTasks;
+
+            })())
+
+         
+
         }
     );
 
