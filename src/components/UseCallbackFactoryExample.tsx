@@ -22,21 +22,22 @@ export const UseCallbackFactoryExample = ()=>{
         ]
     );
 
-    const onClickFactory = useCallbackFactory(([taskIndex]: [number])=>{
+    const onClickFactory = useCallbackFactory(
+        ([taskIndex]: [number])=>{
 
-        if(tasks[taskIndex].isInEditingState){
-            return;
+            if(tasks[taskIndex].isInEditingState){
+                return;
+            }
+
+            setTasks((()=>{
+                const newTasks = [...tasks];
+
+                newTasks[taskIndex].isInEditingState = true;
+
+                return newTasks;
+            })());
         }
-
-        setTasks((()=>{
-            const newTasks = [...tasks];
-
-            newTasks[taskIndex].isInEditingState = true;
-
-            return newTasks;
-        })());
-
-    });
+    );
 
 
     const onEditTaskFactory = useCallbackFactory(
@@ -54,7 +55,6 @@ export const UseCallbackFactoryExample = ()=>{
 
                 newTasks[taskIndex].description = newDescription;
                 newTasks[taskIndex].isInEditingState = false;
-
 
                 return newTasks;
 
@@ -104,37 +104,51 @@ const {TaskComponent} = (()=>{
     const TaskComponent = memo((props: Props)=>{
 
 
-        const {description, isInEditingState, onClick, onEditTask} = props;
+        const {
+            description, 
+            isInEditingState, 
+            onClick, 
+            onEditTask
+        } = props;
+
         const [textInput, setTextInput] = useState("");
 
 
         console.log(`render ${description}`);
 
-        const onChange= useCallback((e: React.ChangeEvent<HTMLInputElement>)=>{
-            setTextInput(e.target.value);
-        },[])
-
-        const onSubmit = useCallback((e: React.FormEvent<HTMLFormElement>)=>{
-            if(textInput === ""){
-                return;
+        const onChange= useCallback(
+            (e: React.ChangeEvent<HTMLInputElement>)=>{
+                setTextInput(e.target.value);
             }
+        ,[])
 
-            e.preventDefault();
+        const onSubmit = useCallback(
+            (e: React.FormEvent<HTMLFormElement>)=>{
+                if(textInput === ""){
+                    return;
+                }
 
-            onEditTask({
-                "newDescription": textInput
-            });
+                e.preventDefault();
 
-            setTextInput("");
+                onEditTask({
+                    "newDescription": textInput
+                });
 
-        },[onEditTask, textInput])
+                setTextInput("");
+            }
+        ,[onEditTask, textInput])
 
 
         return (
             <li onClick={onClick}>
                 {
                     isInEditingState ? <form onSubmit={onSubmit}>
-                        <input autoFocus onChange={onChange} value={textInput} type="text"/>
+                        <input 
+                            autoFocus 
+                            onChange={onChange} 
+                            value={textInput} 
+                            type="text"
+                        />
                     </form> : description
                 }
             </li>
