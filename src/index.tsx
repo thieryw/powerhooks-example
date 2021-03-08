@@ -1,9 +1,34 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import reportWebVitals from './reportWebVitals';
-//import {TodoList} from "components/generalExample/TodoList";
+import {useConstCallback} from "powerhooks/useConstCallback";
+import {ExampleWithoutUseCallbackFactory} from "./components/ExampleWithoutUseCallbackFactory";
+import {UseCallbackFactoryExample} from "./components/UseCallbackFactoryExample";
 
+
+const App = ()=>{
+
+  const [displayedExample, setDisplayedExample] = useState<
+    "useCallback" | "useCallbackFactory"
+  >("useCallbackFactory");
+
+  const toggleExamples = useConstCallback(()=>{
+    setDisplayedExample(displayedExample === "useCallbackFactory" ? "useCallback" : "useCallbackFactory");
+  });
+
+  return(
+    <div>
+      <button onClick={toggleExamples}>Toggle Examples</button>
+
+      {
+        displayedExample === "useCallback" ? 
+          <ExampleWithoutUseCallbackFactory/> :
+          <UseCallbackFactoryExample />
+      }
+
+    </div>
+  )
+}
 
 ReactDOM.render(
   <React.StrictMode>
@@ -13,7 +38,8 @@ ReactDOM.render(
 
 
   <div>
-    ok
+
+    <App/>
 
 
 
