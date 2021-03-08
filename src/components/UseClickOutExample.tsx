@@ -1,4 +1,5 @@
 import {useClickOut} from "../customHooks/useClickOut";
+import {useClickOut2} from "../customHooks/useClickOut2";
 import {useCallbackFactory} from "powerhooks/useCallbackFactory";
 import { useRef, memo} from "react";
 import React, {useState} from "react";
@@ -32,7 +33,11 @@ export const UseClickOutExample = ()=>{
 
 
     const buttonRef = useRef<HTMLButtonElement>(null);
+    const tasksRef = useRef<HTMLDivElement>(null);
+
     
+
+   
 
     const onClickFactory = useCallbackFactory(([taskIndex]: [number])=>{
 
@@ -50,14 +55,13 @@ export const UseClickOutExample = ()=>{
 
     });
 
-    useClickOut({
-        "refs": [buttonRef],
-        "onClickOut": ()=>{
+    useClickOut2({
+        "refs": [tasksRef, buttonRef],
+        "onClickOut": ()=>
             setTasks(tasks.map(task => {
                 task.isSelected = false;
                 return task;
-            }));
-        }
+            }))
     })
 
     return (
@@ -80,6 +84,7 @@ export const UseClickOutExample = ()=>{
             </button>
 
             <div 
+                ref={tasksRef}
                 className={css({
                     "border": "solid black 1px",
                     "width": 400,
@@ -111,9 +116,11 @@ const {TaskComponent} = (()=>{
 
     const TaskComponent = memo((props: Props)=>{
 
-        console.log("render");
 
         const {isSelected, description, onClick} = props;
+
+        console.log("render task");
+
 
         return(
             <p onClick={onClick} className={css({

@@ -8,7 +8,7 @@ export const UseDomRectExample = ()=>{
     ref: textareaRef,
     "domRect": {
       width: textareaWidth,
-      height: textareaHeight
+      height: textareaHeight,
     }
   } = useDomRect();
 
