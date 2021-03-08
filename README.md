@@ -3,15 +3,15 @@
 ##Running it: ##
 
 ```
-    git clone git clone --branch useCallbackFactory-comprehensive-example https://github.com/thieryw/powerhooks-example
+git clone git clone --branch useCallbackFactory-comprehensive-example https://github.com/thieryw/powerhooks-example
 ```
 
 ```
-    yarn 
+yarn 
 ```
 
 ```
-    yarn start
+yarn start
 ```
 
 
