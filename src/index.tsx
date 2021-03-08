@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 //import {TodoList} from "components/generalExample/TodoList";
-import {UseClickOutExample} from "./components/UseClickOutExample";
 
 
 ReactDOM.render(
@@ -14,8 +13,7 @@ ReactDOM.render(
 
 
   <div>
-
-    <UseClickOutExample/>
+    ok
 
 
 
