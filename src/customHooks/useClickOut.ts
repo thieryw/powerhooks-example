@@ -14,24 +14,28 @@ export function useClickOut(params: {
     useEvt(ctx => Evt.from(ctx, window, "click")
         .attach((event)=> {
 
-            console.log(refs[0].current?.childElementCount);
 
             for(const ref of refs){
 
-
                 if(!ref.current) return;
 
-                if(
-                    event.clientX >= ref.current.offsetLeft 
-                        &&
-                    event.clientX <= ref.current.offsetLeft + 
-                    ref.current.offsetWidth
-                        &&
-                    event.clientY >= ref.current.offsetTop
-                        &&
-                    event.clientY <= ref.current.offsetTop +
-                    ref.current.offsetHeight
+                const [height, top, width, left] = [
+                    ref.current.offsetHeight, 
+                    ref.current.offsetTop,
+                    ref.current.offsetWidth, 
+                    ref.current.offsetLeft,
+                ]
 
+                const [x, y] = [
+                    event.pageX,
+                    event.pageY
+                ]
+
+                if(
+                    x >= left && 
+                    x <= left + width &&
+                    y >= top &&
+                    y <= top + height
                 ) return;
             }
 

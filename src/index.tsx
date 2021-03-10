@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 //import {TodoList} from "components/generalExample/TodoList";
-import {UseClickOutExample} from "./components/UseClickOutExample";
+import {UseCallbackFactoryExample} from "./components/UseCallbackFactoryExample";
 
 
 ReactDOM.render(
@@ -15,7 +15,8 @@ ReactDOM.render(
 
   <div>
 
-    <UseClickOutExample/>
+    <UseCallbackFactoryExample />
+
 
 
 

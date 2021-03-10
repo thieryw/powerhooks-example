@@ -1,5 +1,4 @@
 import {useClickOut} from "../customHooks/useClickOut";
-import {useClickOut2} from "../customHooks/useClickOut2";
 import {useCallbackFactory} from "powerhooks/useCallbackFactory";
 import { useRef, memo} from "react";
 import React, {useState} from "react";
@@ -55,7 +54,7 @@ export const UseClickOutExample = ()=>{
 
     });
 
-    useClickOut2({
+    useClickOut({
         "refs": [tasksRef, buttonRef],
         "onClickOut": ()=>
             setTasks(tasks.map(task => {
@@ -86,7 +85,7 @@ export const UseClickOutExample = ()=>{
             <div 
                 ref={tasksRef}
                 className={css({
-                    "border": "solid black 1px",
+                    "border": "solid black 20px",
                     "width": 400,
                 })}
             >

@@ -1,161 +1,78 @@
-import {useCallbackFactory} from "powerhooks";
-import {useState, memo, useCallback} from "react";
+import {useCallbackFactory} from "powerhooks/useCallbackFactory";
+import {useState, memo} from "react";
+
 
 type Task = {
     description: string;
-    isInEditingState: boolean;
+    isSelected: boolean;
+
 }
 
 export const UseCallbackFactoryExample = ()=>{
 
-    const [tasks, setTasks] = useState<Task[]>(
-        [
-            {
-                "description": "piano practice",
-                "isInEditingState": false
-            },
+    const [tasks, setTasks] = useState<Task[]>([
+        {
+            "description": "go to the gym",
+            "isSelected": false
+        },
+        {
+            "description": "feed the cat",
+            "isSelected": false
+        },
+        {
+            "description": "clean the house",
+            "isSelected": false
+        }
 
-            {
-                "description": "clean the house",
-                "isInEditingState": false
-            }
-        ]
-    );
+    ]);
 
     const onClickFactory = useCallbackFactory(
         ([taskIndex]: [number])=>{
 
-            if(tasks[taskIndex].isInEditingState){
-                return;
+            tasks[taskIndex].isSelected = !tasks[taskIndex].isSelected;
+
+            setTasks([...tasks]);
+        }
+    )
+
+
+    return (
+        <>
+            <h1>useCallbackFactory example</h1>
+            {
+                tasks.map(
+                    (task, index) => 
+                    <TaskComponent 
+                        description={task.description}
+                        isSelected={task.isSelected}
+                        onClick={onClickFactory(index)}
+                        key={JSON.stringify(task.description + index)}
+                    />
+                )
             }
-
-            setTasks((()=>{
-                const newTasks = [...tasks];
-
-                newTasks[taskIndex].isInEditingState = true;
-
-                return newTasks;
-            })());
-        }
-    );
-
-
-    const onEditTaskFactory = useCallbackFactory(
-        (
-            [taskIndex]: [number],
-            [params]: [{
-                newDescription: string;
-            }]
-        )=>{
-            const {newDescription} = params;
-
-            setTasks((()=>{
-
-                const newTasks = [...tasks];
-
-                newTasks[taskIndex].description = newDescription;
-                newTasks[taskIndex].isInEditingState = false;
-
-                return newTasks;
-
-            })())
-
-         
-
-        }
-    );
-
-
-
-
-
-    return(
-        <div>
-            <h1>UseCallbackFactory Example:</h1>
-            <ul>
-                {
-                    tasks.map(
-                        (task, index)=> 
-                        <TaskComponent 
-                            description={task.description} 
-                            isInEditingState={task.isInEditingState} 
-                            onClick={onClickFactory(index)}
-                            onEditTask={onEditTaskFactory(index)}
-                            key={`${task.description}+${index}`}
-                        />
-                    )
-                }
-            </ul>
-        </div>
+        </>
     )
 }
 
 
-const {TaskComponent} = (()=>{
-    type Props = Task & {
+const TaskComponent = memo((
+    props: Task &
+    {
         onClick(): void;
-        onEditTask(
-            params: {
-                newDescription: string;
-            }
-        ): void;
-    };
+    }
+)=>{
 
-    const TaskComponent = memo((props: Props)=>{
+    const {description, isSelected, onClick} = props;
 
+    console.log("render " + description);
 
-        const {
-            description, 
-            isInEditingState, 
-            onClick, 
-            onEditTask
-        } = props;
+    return(
+        <div onClick={onClick} style={{
+            "backgroundColor": isSelected ?  "black" : "lightblue",
+            "color": isSelected ? "white" : "black"
+        }}>
+            <p>{description}</p>
+        </div>
+    )
 
-        const [textInput, setTextInput] = useState("");
-
-
-        console.log(`render ${description}`);
-
-        const onChange= useCallback(
-            (e: React.ChangeEvent<HTMLInputElement>)=>{
-                setTextInput(e.target.value);
-            }
-        ,[])
-
-        const onSubmit = useCallback(
-            (e: React.FormEvent<HTMLFormElement>)=>{
-                if(textInput === ""){
-                    return;
-                }
-
-                e.preventDefault();
-
-                onEditTask({
-                    "newDescription": textInput
-                });
-
-                setTextInput("");
-            }
-        ,[onEditTask, textInput])
-
-
-        return (
-            <li onClick={onClick}>
-                {
-                    isInEditingState ? <form onSubmit={onSubmit}>
-                        <input 
-                            autoFocus 
-                            onChange={onChange} 
-                            value={textInput} 
-                            type="text"
-                        />
-                    </form> : description
-                }
-            </li>
-        )
-    });
-
-    return {TaskComponent};
-})()
-
-
+})
