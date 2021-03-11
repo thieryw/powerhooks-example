@@ -1,11 +1,9 @@
 import {useCallbackFactory} from "powerhooks/useCallbackFactory";
 import {useState, memo} from "react";
 
-
 type Task = {
     description: string;
     isSelected: boolean;
-
 }
 
 export const UseCallbackFactoryExample = ()=>{
@@ -34,7 +32,6 @@ export const UseCallbackFactoryExample = ()=>{
             setTasks([...tasks]);
         }
     )
-
 
     return (
         <>
