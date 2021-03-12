@@ -51,7 +51,7 @@ export const App = ()=>{
                 ornare elit, at mattis lorem quam sed quam. Vestibulum viverra quam id 
                 nibh aliquam rutrum. Nunc pulvinar iaculis sapien, commodo semper 
                 velit semper eget. Mauris vitae metus vulputate, blandit eros eu, 
-                facilisis metus. 
+                facilisis metus, lorem ipsum. 
             </p>
 
         </div>
