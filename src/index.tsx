@@ -1,37 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import reportWebVitals from './reportWebVitals';
-//import {TodoList} from "components/generalExample/TodoList";
-//import {UseCallbackFactoryExample} from "./components/UseCallbackFactoryExample";
-import {UseClickExample} from "./components/UseClickExample";
+import {ThemeProvider} from "./theme/ThemeProvider";
+import {App} from "./components/App";
 
 
 
 ReactDOM.render(
   <React.StrictMode>
 
+    <ThemeProvider>
+      <App/>
 
-
-
-
-  <div>
-
-    <UseClickExample />
-
-
-
-
-
-
-    
-  </div>
-
-
-
-
-
-
+    </ThemeProvider>
 
 
 
