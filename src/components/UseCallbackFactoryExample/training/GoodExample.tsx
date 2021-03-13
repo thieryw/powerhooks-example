@@ -1,6 +1,7 @@
 import {useState, memo, useMemo} from "react";
 import {useCallbackFactory} from "powerhooks/useCallbackFactory";
-import {createUseClassNames, css, cx} from "useClassNames";
+import {createUseClassNames} from "theme/useClassNames";
+import {css, cx} from "tss-react";
 
 
 const {useClassNames} = createUseClassNames<{isGameWon: boolean;}>()(

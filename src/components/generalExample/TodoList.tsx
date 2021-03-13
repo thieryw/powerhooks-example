@@ -1,9 +1,12 @@
-import {useMemo} from "react";
-import {createUseClassNames} from "useClassNames";
+import {useMemo, useRef} from "react";
+import {createUseClassNames} from "theme/useClassNames";
 import {useConstCallback} from "powerhooks/useConstCallback";
 import {useCallbackFactory} from "powerhooks/useCallbackFactory";
 import {useNamedState} from "powerhooks/useNamedState";
 import {TaskComponent} from "./Task";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import {useClickOut} from "customHooks/useClickOut";
 
 export type Task = {
     description: string;
@@ -43,11 +46,17 @@ const {useClassNames} = createUseClassNames()(
         },
         "buttonWrapper": {
             "marginTop": 20,
-            "backgroundColor": "darkgray",
             "& button": {
                 "margin": 10
             }
             
+        },
+        "list": {
+            "border": "solid black 1px",
+            "padding": "0 10px 0 10px",
+            "& li": {
+                "marginLeft":0
+            }
         }
         
     })
@@ -63,6 +72,9 @@ export const TodoList = ()=>{
     const {setTextInput, textInput} = 
         useNamedState<string, "textInput">("textInput", "");
 
+
+    const listRef = useRef<HTMLUListElement>(null);
+    const buttonsRef = useRef<HTMLDivElement>(null);
 
 
     const {setTasks, tasks} = useNamedState<Task[], "tasks">("tasks", [
@@ -297,6 +309,12 @@ export const TodoList = ()=>{
     });
 
 
+    useClickOut({
+        "refs": [buttonsRef, listRef],
+        "onClickOut": selectOrClearAllTasksFactory("clear")
+    })
+
+
 
 
     const {classNames} = useClassNames({});
@@ -304,49 +322,50 @@ export const TodoList = ()=>{
 
     return (
         <div className={classNames.root}>
-            <h2>TodoList example</h2>
+            <h2>Todo List With Power Hooks</h2>
             <form onSubmit={onSubmit}>
-                <input value={textInput} onChange={onChange} type="text"/>
+                <TextField color="secondary" variant="outlined" value={textInput} onChange={onChange} type="text"/>
 
-                <input type="submit"/>
+                <TextField color="secondary" variant="outlined" type="submit"/>
             </form>
 
-            <div className={classNames.buttonWrapper}>
-                <button 
+            <div ref={buttonsRef} className={classNames.buttonWrapper}>
+                <Button 
                     onClick={deleteSelectedTasks}
                     disabled={selectedTaskIds.length === 0}
                 >
                     {`Delete Task${selectedTaskIds.length > 1 ? "s" : ""}`}
-                </button>
-                <button 
+                </Button>
+                <Button 
                     onClick={selectOrClearAllTasksFactory("select")}
                     disabled={tasks.length === 0}
                 >
                     Select All
-                </button>
-                <button 
+                </Button>
+                <Button 
                     onClick={selectOrClearAllTasksFactory("clear")}
                     disabled={selectedTaskIds.length === 0}
                 >
                     {`Clear Selected Task${selectedTaskIds.length > 1 ? "s" : ""}`}
-                </button>
-                <button
+                </Button>
+                <Button
                     onClick={setSelectedTaskToEditionState}
                     disabled={selectedTaskIds.length !== 1 || indexOfTaskInEditingMod !== undefined}
                 >
                     Edit Task
-                </button>
-                <button
+                </Button>
+                <Button
                     onClick={toggleTaskValidation}
                     disabled={selectedTaskIds.length < 1 || indexOfTaskInEditingMod !== undefined}
 
                 >
                     Toggle Task Validation
-                </button>
+                </Button>
+               
             </div>
 
 
-            <ul>
+            <ul ref={listRef} className={classNames.list}>
                 {
                     tasks.map((task, index) => 
                         <TaskComponent

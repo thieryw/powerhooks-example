@@ -1,5 +1,6 @@
 import { useState, useMemo, memo } from "react";
-import { createUseClassNames, css, cx } from "useClassNames";
+import { createUseClassNames} from "theme/useClassNames";
+import {css, cx} from "tss-react";
 
 type CellState = "X" | "O" | "";
 

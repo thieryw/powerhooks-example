@@ -1,8 +1,7 @@
 import {useClickOut} from "../customHooks/useClickOut";
 import {useCallbackFactory} from "powerhooks/useCallbackFactory";
-import { useRef, memo} from "react";
-import React, {useState} from "react";
-import {css} from "jss-emotion";
+import {useRef, memo, useState} from "react";
+import {css} from "tss-react";
 import {useConstCallback} from "powerhooks";
 
 

@@ -2,42 +2,40 @@ import {Task} from "./TodoList";
 import {memo, useEffect, useRef} from "react";
 import {useNamedState} from "powerhooks/useNamedState";
 import {useConstCallback} from "powerhooks/useConstCallback";
-import {createUseClassNames} from "useClassNames";
+import {createUseClassNames} from "theme/useClassNames";
 import {useClick} from "powerhooks/useClick";
+import ListItem from "@material-ui/core/ListItem";
 
-/*const {useClassNames} = createUseClassNames<{isTaskSelected: boolean; isTaskValidated: boolean}>()(
-    (...[, {isTaskSelected, isTaskValidated}])=>({
-        "root": {
-            "listStyle": "none",
-            "backgroundColor": isTaskSelected ? "blue" : "lightblue",
-            "color": isTaskSelected ? "white" : "unset",
-            "marginBlock": 0,
-            "wordBreak": "break-all",
-            "padding": "10px 10px 10px 30px",
-            "margin": 10,
-            "textDecoration": `${isTaskValidated ? "line-through" : "unset"}`
 
-        },
-    })
-)*/
 
 const {useClassNames} = createUseClassNames<{isTaskSelected: boolean; isTaskValidated: boolean}>()(
     (theme, {isTaskSelected, isTaskValidated})=>({
 
         "root": {
             "listStyle": "none",
-            "backgroundColor": isTaskSelected ? "blue" : "lightblue",
-            "color": isTaskSelected ? "white" : "unset",
+            "backgroundColor": (()=>{
+
+                let out: any = "";
+                
+                switch(theme.palette.type){
+                    case "dark" : out = isTaskSelected ? "#09134f" : theme.palette.background.paper; break;
+                    case "light" : out = isTaskSelected ? "#eb742a" : theme.palette.background.paper; break;
+                }
+
+                return out;
+
+            })(),
             "marginBlock": 0,
             "wordBreak": "break-all",
             "padding": "10px 10px 10px 30px",
-            "margin": 10,
-            "textDecoration": `${isTaskValidated ? "line-through" : "unset"}`
-
-
+            "textDecoration": `${isTaskValidated ? "line-through" : "unset"}`,
+            "transition": "background-color 300ms, color 300ms",
+            ":hover": {
+                "cursor": "pointer",
+                "backgroundColor": isTaskSelected ? "" : theme.palette.grey[300],
+                "color": isTaskSelected ? "" : "black"
+            }
         }
-
-
     })
 )
 
@@ -114,7 +112,7 @@ export const TaskComponent = memo((props: Props)=>{
         isTaskValidated
     });
      return (
-        <li                     
+        <ListItem                     
             className={classNames.root}
             {...getOnMouseProps()}
         >
@@ -125,15 +123,15 @@ export const TaskComponent = memo((props: Props)=>{
                             autoFocus 
                             onChange={onChange} 
                             value={textInput} 
-                            type="text"
                             ref={inputRef}
+                            type="text"
                             
                         />
                     </form> 
                     : 
                     description
             }
-        </li>
+        </ListItem>
     )
 
 });
