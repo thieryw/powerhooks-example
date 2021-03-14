@@ -61,8 +61,7 @@ export const TaskComponent = memo((props: Props)=>{
         isInEditingState,
         isTaskValidated
     } = props;
-    const {setTextInput, textInput} = 
-        useNamedState<string, "textInput">("textInput", description);
+    const {setTextInput, textInput} = useNamedState("textInput", description);
 
     const inputRef = useRef<HTMLInputElement>(null);
 

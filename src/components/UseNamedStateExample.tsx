@@ -7,7 +7,7 @@ import {useCallback} from "react";
 export const UseNamedStateExample = ()=>{
 
 
-    const {count, setCount} = useNamedState<number, "count">("count", 0);
+    const {count, setCount} = useNamedState("count", 0);
 
     const clickHandler = useCallback(()=>{
         if(count > 9){

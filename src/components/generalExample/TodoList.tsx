@@ -69,8 +69,7 @@ export const TodoList = ()=>{
 
     console.log("render general");
 
-    const {setTextInput, textInput} = 
-        useNamedState<string, "textInput">("textInput", "");
+    const {setTextInput, textInput} = useNamedState("textInput", "");
 
 
     const listRef = useRef<HTMLUListElement>(null);
